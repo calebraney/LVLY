@@ -1,6 +1,9 @@
 import { attr } from './utilities';
 import { hoverActive } from './interactions/hover-active';
 import { scrollIn } from './interactions/scroll-in';
+import { load } from './interactions/load';
+import { initLenis } from './interactions/lenis';
+import { parallax } from './interactions/parallax';
 
 document.addEventListener('DOMContentLoaded', function () {
   // Comment out for production
@@ -12,9 +15,76 @@ document.addEventListener('DOMContentLoaded', function () {
   if (gsap.Flip !== undefined) {
     gsap.registerPlugin(Flip);
   }
+  //init lenis library
+  const lenis = initLenis();
+  console.log(lenis);
 
   //////////////////////////////
-  //Global Variables
+  //Functions from Original JS
+  // Navbar
+  // ============================================
+  function globalNavbar() {
+    let lastScrollTop = 0;
+    const scrollThreshold = 50;
+    let isNavbarHidden = false;
+
+    // Check if the current URL is not the homepage
+    if (window.location.pathname !== '/') {
+      lenis.on('scroll', ({ scroll }) => {
+        const nowScrollTop = scroll;
+
+        if (nowScrollTop > lastScrollTop) {
+          // Scrolling down
+          if (nowScrollTop > scrollThreshold && !isNavbarHidden) {
+            // Scroll down past threshold: hide navbar
+            $('.nav_contain').addClass('active');
+            isNavbarHidden = true;
+          }
+        } else {
+          // Scrolling up
+          if (isNavbarHidden) {
+            // Scroll up: show navbar instantly
+            $('.nav_contain').removeClass('active');
+            isNavbarHidden = false;
+          }
+        }
+
+        lastScrollTop = nowScrollTop;
+      });
+    }
+
+    // Hamburger toggle
+    const hamburger = $('.nav_hamburger'); // Open & close target
+    const navWrap = $('.nav_wrap'); // Active class target
+    const menuLinks = $('.nav_menu_upper_link'); // Menu links that should close the menu on click
+
+    // Toggle the 'active' class on the hamburger
+    hamburger.on('click', function () {
+      navWrap.toggleClass('active');
+
+      if (navWrap.hasClass('active')) {
+        lenis.stop();
+      } else {
+        lenis.start();
+      }
+    });
+
+    // Close the menu when clicking on any .nav_menu_upper_link if navWrap is active
+    menuLinks.on('click', function () {
+      if (navWrap.hasClass('active')) {
+        navWrap.removeClass('active');
+        lenis.start();
+      }
+    });
+
+    // Escape key listener (added once, checks if menu is active)
+    $(document).on('keydown', function (e) {
+      if (e.key === 'Escape' && navWrap.hasClass('active')) {
+        navWrap.removeClass('active');
+        lenis.start();
+      }
+    });
+  }
 
   //////////////////////////////
   //Control Functions on page load
@@ -31,10 +101,13 @@ document.addEventListener('DOMContentLoaded', function () {
       (gsapContext) => {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
         //functional interactions
+        load(gsapContext);
         hoverActive(gsapContext);
+        globalNavbar();
         //conditional interactions
         if (!reduceMotion) {
           scrollIn(gsapContext);
+          parallax(gsapContext);
         }
       }
     );
