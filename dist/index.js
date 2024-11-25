@@ -829,27 +829,48 @@
     const ANIMATION_ID = "hoveractive";
     const WRAP = '[data-ix-hoveractive="wrap"]';
     const ITEM = '[data-ix-hoveractive="item"]';
+    const TARGET = '[data-ix-hoveractive="target"]';
+    const ID = "data-ix-hoveractive-id";
     const OPTION_ACTIVE_CLASS = "data-ix-hoveractive-class";
     const OPTION_KEEP_ACTIVE = "data-ix-hoveractive-keep-active";
     const ACTIVE_CLASS = "is-active";
     const wraps = gsap.utils.toArray(WRAP);
-    const activateOnHover = function(parent) {
-      const children = parent.querySelectorAll(ITEM);
+    const hoverActiveList = function(parent) {
+      const children = [...parent.querySelectorAll(ITEM)];
       let activeClass = attr(ACTIVE_CLASS, parent.getAttribute(OPTION_ACTIVE_CLASS));
       let keepActive = attr(false, parent.getAttribute(OPTION_KEEP_ACTIVE));
+      function activateItem(item, activate = true) {
+        let hasTarget = true;
+        const itemID = item.getAttribute(ID);
+        const targetEl = parent.querySelector(`${TARGET}[${ID}="${itemID}"]`);
+        if (!itemID || !targetEl) {
+          hasTarget = false;
+        }
+        if (activate) {
+          item.classList.add(activeClass);
+          if (hasTarget) {
+            targetEl.classList.add(activeClass);
+          }
+        } else {
+          item.classList.remove(activeClass);
+          if (hasTarget) {
+            targetEl.classList.remove(activeClass);
+          }
+        }
+      }
       children.forEach((currentItem) => {
         currentItem.addEventListener("mouseover", function(e2) {
           children.forEach((child) => {
             if (child === currentItem) {
-              child.classList.add(activeClass);
+              activateItem(child, true);
             } else {
-              child.classList.remove(activeClass);
+              activateItem(currentItem, false);
             }
           });
         });
         currentItem.addEventListener("mouseleave", function(e2) {
           if (!keepActive) {
-            currentItem.classList.remove(activeClass);
+            activateItem(currentItem, false);
           }
         });
       });
@@ -858,11 +879,11 @@
       wraps.forEach((wrap) => {
         let runOnBreakpoint = checkBreakpoints(wrap, ANIMATION_ID, gsapContext);
         if (runOnBreakpoint === false) return;
-        activateOnHover(wrap);
+        hoverActiveList(wrap);
       });
     } else {
       const body = document.querySelector(body);
-      activateOnHover(body);
+      hoverActiveList(body);
     }
   };
 
