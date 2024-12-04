@@ -117,24 +117,31 @@ document.addEventListener('DOMContentLoaded', function () {
         ease: 'power1.inOut',
       });
     };
-    updateLogo(true);
+    // updateLogo(true);
     let tl = gsap.timeline({
       scrollTrigger: {
         trigger: heroSection,
         start: 'center 45%',
         end: 'bottom 100%',
-        // end: '50% 30%',
-        scrub: true,
-        markers: false,
+        markers: true,
         onEnter: () => {
-          // console.log('onEnter');
+          // console.log('enter');
           updateLogo(false);
         },
         onEnterBack: () => {
-          // console.log('onEnterBack');
+          // console.log('enter back');
           updateLogo(true);
         },
       },
+    });
+    //kill flips on browser resize
+    let windowWidth = window.innerWidth;
+    window.addEventListener('resize', function () {
+      if (window.innerWidth !== windowWidth) {
+        windowWidth = window.innerWidth;
+        //input code you want run after the browser width is changed
+        Flip.killFlipsOf(logo);
+      }
     });
   };
 

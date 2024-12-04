@@ -6137,21 +6137,25 @@
           ease: "power1.inOut"
         });
       };
-      updateLogo(true);
       let tl = gsap.timeline({
         scrollTrigger: {
           trigger: heroSection,
           start: "center 45%",
           end: "bottom 100%",
-          // end: '50% 30%',
-          scrub: true,
-          markers: false,
+          markers: true,
           onEnter: () => {
             updateLogo(false);
           },
           onEnterBack: () => {
             updateLogo(true);
           }
+        }
+      });
+      let windowWidth = window.innerWidth;
+      window.addEventListener("resize", function() {
+        if (window.innerWidth !== windowWidth) {
+          windowWidth = window.innerWidth;
+          Flip.killFlipsOf(logo);
         }
       });
     };
