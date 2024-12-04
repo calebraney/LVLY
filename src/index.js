@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     gsap.registerPlugin(Flip);
   }
   //init lenis library
-  const lenis = initLenis();
+  // const lenis = initLenis();
   //////////////////////////////
   //custom interactions
   //selectors
@@ -26,12 +26,14 @@ document.addEventListener('DOMContentLoaded', function () {
   //scroll timeline interactions
   const homeLoad = function () {
     const SECTION = '[data-ix-homeload="wrap"]';
+    const MAIN_VIDEO = '[data-ix-homeload="video"]';
     const LOGO = '[data-ix-homeload="logo"]';
     const LOGO_PATHS = '[data-ix-homeload="path"]';
     const LINKS = '[data-ix-homeload="link"]';
 
     //elements
     const section = document.querySelector(SECTION);
+    const video = document.querySelector(MAIN_VIDEO);
     const logo = document.querySelector(LOGO);
     const links = [...document.querySelectorAll(LINKS)];
     const logoPaths = [...document.querySelectorAll(LOGO_PATHS)];
@@ -55,15 +57,43 @@ document.addEventListener('DOMContentLoaded', function () {
       },
     });
     tl.fromTo(
+      video,
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 1,
+        ease: 'power2.out',
+        duration: 1.2,
+      },
+      '<'
+    );
+    tl.fromTo(
+      video,
+      {
+        yPercent: 5,
+        scaleY: 1.05,
+      },
+      {
+        yPercent: 0,
+        scaleY: 1,
+        duration: 0.8,
+        ease: 'power1.inOut',
+      },
+      '<'
+    );
+    tl.fromTo(
       logoPaths,
       {
         opacity: 0,
       },
       {
         opacity: 1,
-        ease: 'power1.out',
-        stagger: { each: 0.1, from: 'start' },
-      }
+        ease: 'power2.inOut',
+        duration: 1.2,
+        stagger: { each: 0.2, from: 'start' },
+      },
+      '<'
     );
     tl.fromTo(
       logo,
