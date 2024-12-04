@@ -6069,12 +6069,17 @@
       const logo = document.querySelector(LOGO);
       const links = [...document.querySelectorAll(LINKS)];
       const logoPaths = [...document.querySelectorAll(LOGO_PATHS)];
+      const body = document.querySelector("body");
       if (!logo || links.length === 0) return;
       let tl = gsap.timeline({
         defaults: {
           duration: 1,
           ease: "power2.out"
         },
+        // onStart: () => {
+        //   window.scrollTo({ top: 0 });
+        //   body.style.overflow = 'hidden';
+        // },
         onComplete: () => {
         }
       });
@@ -6119,10 +6124,7 @@
       const heroSection = document.querySelector(".hero_home_wrap");
       if (!logo || !heroLogoWrap || !navLogoWrap) return;
       const updateLogo = function(moveToHero = false) {
-        if (Flip.isFlipping(logo)) {
-          Flip.killFlipsOf(logo);
-        }
-        let state = Flip.getState(logo, { nested: false, scale: true });
+        let state = Flip.getState(logo, { nested: true });
         if (moveToHero) {
           heroLogoWrap.insertAdjacentElement("beforeend", logo);
         } else {
@@ -6130,9 +6132,9 @@
         }
         Flip.from(state, {
           absolute: true,
-          // scale: false,
+          // scale: true,
           duration: 0.6,
-          ease: "power1.out"
+          ease: "power1.inOut"
         });
       };
       updateLogo(true);
@@ -6143,7 +6145,7 @@
           end: "bottom 100%",
           // end: '50% 30%',
           scrub: true,
-          markers: true,
+          markers: false,
           onEnter: () => {
             updateLogo(false);
           },
