@@ -17,11 +17,12 @@ document.addEventListener('DOMContentLoaded', function () {
   if (gsap.Flip !== undefined) {
     gsap.registerPlugin(Flip);
   }
-  //init lenis library
-  // const lenis = initLenis();
+  //global variables
+  let lenis;
+  const body = document.querySelector('body');
+
   //////////////////////////////
   //custom interactions
-  //selectors
 
   //scroll timeline interactions
   const homeLoad = function () {
@@ -37,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const logo = document.querySelector(LOGO);
     const links = [...document.querySelectorAll(LINKS)];
     const logoPaths = [...document.querySelectorAll(LOGO_PATHS)];
-    const body = document.querySelector('body');
 
     //guard clause
     if (!logo || links.length === 0) return;
@@ -102,7 +102,8 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       {
         x: '0em',
-      }
+      },
+      '-=.4'
     );
     tl.fromTo(
       links,
@@ -329,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let isNavbarHidden = false;
 
     // Check if the current URL is not the homepage
-    if (window.location.pathname !== '/') {
+    if (window.location.pathname !== '/' && lenis !== undefined) {
       lenis.on('scroll', ({ scroll }) => {
         const nowScrollTop = scroll;
 
@@ -363,9 +364,17 @@ document.addEventListener('DOMContentLoaded', function () {
       navWrap.toggleClass('active');
 
       if (navWrap.hasClass('active')) {
-        lenis.stop();
+        if (lenis !== undefined) {
+          lenis.stop();
+        } else {
+          body.classList.add('no-scroll');
+        }
       } else {
-        lenis.start();
+        if (lenis !== undefined) {
+          lenis.start();
+        } else {
+          body.classList.remove('no-scroll');
+        }
       }
     });
 
@@ -373,7 +382,11 @@ document.addEventListener('DOMContentLoaded', function () {
     menuLinks.on('click', function () {
       if (navWrap.hasClass('active')) {
         navWrap.removeClass('active');
-        lenis.start();
+        if (lenis !== undefined) {
+          lenis.start();
+        } else {
+          body.classList.remove('no-scroll');
+        }
       }
     });
 
@@ -381,7 +394,11 @@ document.addEventListener('DOMContentLoaded', function () {
     $(document).on('keydown', function (e) {
       if (e.key === 'Escape' && navWrap.hasClass('active')) {
         navWrap.removeClass('active');
-        lenis.start();
+        if (lenis !== undefined) {
+          lenis.start();
+        } else {
+          body.classList.remove('no-scroll');
+        }
       }
     });
   }
@@ -537,11 +554,19 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       (gsapContext) => {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
+        const currentUrl = window.location.pathname;
+        // if homepage
+        if (currentUrl === '/') {
+          //do something
+          homeLogoScroll();
+        } else {
+          lenis = initLenis();
+        }
         //functional interactions
         load(gsapContext);
         hoverActive(gsapContext);
         homeLoad();
-        homeLogoScroll();
+
         //OG Interactions
         globalNavbar();
         pageProjectTemplate();
