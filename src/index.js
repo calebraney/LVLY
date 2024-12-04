@@ -109,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         navLogoWrap.insertAdjacentElement('beforeend', logo);
       }
-      // gsap.set(logo, { clearProps: true });
       // animate element
       Flip.from(state, {
         absolute: true,
