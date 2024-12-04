@@ -51,9 +51,9 @@ export const hoverActive = function (gsapContext) {
         //go through each child and activate the current item
         children.forEach((child) => {
           if (child === currentItem) {
-            activateItem(child, true);
+            activateItem(currentItem, true);
           } else {
-            activateItem(currentItem, false);
+            activateItem(child, false);
           }
         });
       });

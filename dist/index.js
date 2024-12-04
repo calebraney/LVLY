@@ -862,9 +862,9 @@
         currentItem.addEventListener("mouseover", function(e2) {
           children.forEach((child) => {
             if (child === currentItem) {
-              activateItem(child, true);
+              activateItem(currentItem, true);
             } else {
-              activateItem(currentItem, false);
+              activateItem(child, false);
             }
           });
         });
@@ -6060,6 +6060,56 @@
       gsap.registerPlugin(Flip);
     }
     const lenis = initLenis();
+    const homeLoad = function() {
+      const SECTION = '[data-ix-homeload="wrap"]';
+      const LOGO = '[data-ix-homeload="logo"]';
+      const LOGO_PATHS = '[data-ix-homeload="path"]';
+      const LINKS = '[data-ix-homeload="link"]';
+      const section = document.querySelector(SECTION);
+      const logo = document.querySelector(LOGO);
+      const links = [...document.querySelectorAll(LINKS)];
+      const logoPaths = [...document.querySelectorAll(LOGO_PATHS)];
+      if (!logo || links.length === 0) return;
+      let tl = gsap.timeline({
+        defaults: {
+          duration: 1,
+          ease: "power2.out"
+        }
+      });
+      tl.fromTo(
+        logoPaths,
+        {
+          opacity: 0
+        },
+        {
+          opacity: 1,
+          ease: "power1.out",
+          stagger: { each: 0.1, from: "start" }
+        }
+      );
+      tl.fromTo(
+        logo,
+        {
+          x: "26em"
+        },
+        {
+          x: "0em"
+        }
+      );
+      tl.fromTo(
+        links,
+        {
+          x: "-10em",
+          opacity: 0
+        },
+        {
+          x: "0em",
+          opacity: 1,
+          stagger: { each: 0.1, from: "start" }
+        },
+        "<.2"
+      );
+    };
     function globalNavbar() {
       let lastScrollTop = 0;
       const scrollThreshold = 50;
@@ -6207,6 +6257,7 @@
           let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
           load(gsapContext);
           hoverActive(gsapContext);
+          homeLoad();
           globalNavbar();
           pageProjectTemplate();
           pageEditorTemplate();
