@@ -6074,6 +6074,8 @@
         defaults: {
           duration: 1,
           ease: "power2.out"
+        },
+        onComplete: () => {
         }
       });
       tl.fromTo(
@@ -6109,6 +6111,47 @@
         },
         "<.2"
       );
+    };
+    const homeLogoScroll = function() {
+      const logo = document.querySelector(".hero_home_logo");
+      const heroLogoWrap = document.querySelector(".hero_home_logo_wrap");
+      const navLogoWrap = document.querySelector(".nav_logo");
+      const heroSection = document.querySelector(".hero_home_wrap");
+      if (!logo || !heroLogoWrap || !navLogoWrap) return;
+      const updateLogo = function(moveToHero = false) {
+        if (Flip.isFlipping(logo)) {
+          Flip.killFlipsOf(logo);
+        }
+        let state = Flip.getState(logo, { nested: false, scale: true });
+        if (moveToHero) {
+          heroLogoWrap.insertAdjacentElement("beforeend", logo);
+        } else {
+          navLogoWrap.insertAdjacentElement("beforeend", logo);
+        }
+        Flip.from(state, {
+          absolute: true,
+          // scale: false,
+          duration: 0.6,
+          ease: "power1.out"
+        });
+      };
+      updateLogo(true);
+      let tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: heroSection,
+          start: "center 45%",
+          end: "bottom 100%",
+          // end: '50% 30%',
+          scrub: true,
+          markers: true,
+          onEnter: () => {
+            updateLogo(false);
+          },
+          onEnterBack: () => {
+            updateLogo(true);
+          }
+        }
+      });
     };
     function globalNavbar() {
       let lastScrollTop = 0;
@@ -6258,6 +6301,7 @@
           load(gsapContext);
           hoverActive(gsapContext);
           homeLoad();
+          homeLogoScroll();
           globalNavbar();
           pageProjectTemplate();
           pageEditorTemplate();

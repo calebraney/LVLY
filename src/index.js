@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
         duration: 1,
         ease: 'power2.out',
       },
+      onComplete: () => {},
     });
     tl.fromTo(
       logoPaths,
@@ -79,6 +80,109 @@ document.addEventListener('DOMContentLoaded', function () {
       '<.2'
     );
   };
+
+  const homeLogoScroll = function () {
+    const logo = document.querySelector('.hero_home_logo');
+    // const logoChildren = logo.querySelectorAll('*');
+    const heroLogoWrap = document.querySelector('.hero_home_logo_wrap');
+    const navLogoWrap = document.querySelector('.nav_logo');
+    const heroSection = document.querySelector('.hero_home_wrap');
+    //guard clause
+    if (!logo || !heroLogoWrap || !navLogoWrap) return;
+    const updateLogo = function (moveToHero = false) {
+      if (Flip.isFlipping(logo)) {
+        // do stuff
+        Flip.killFlipsOf(logo);
+      }
+      let state = Flip.getState(logo, { nested: false, scale: true });
+      //move element
+      if (moveToHero) {
+        heroLogoWrap.insertAdjacentElement('beforeend', logo);
+      } else {
+        navLogoWrap.insertAdjacentElement('beforeend', logo);
+      }
+      // animate element
+      Flip.from(state, {
+        absolute: true,
+        // scale: false,
+        duration: 0.6,
+        ease: 'power1.out',
+      });
+    };
+    updateLogo(true);
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: heroSection,
+        start: 'center 45%',
+        end: 'bottom 100%',
+        // end: '50% 30%',
+        scrub: true,
+        markers: true,
+        onEnter: () => {
+          // console.log('onEnter');
+          updateLogo(false);
+        },
+        onEnterBack: () => {
+          // console.log('onEnterBack');
+          updateLogo(true);
+        },
+      },
+    });
+  };
+
+  /*
+  scrolltrigger version?
+    const homeLogoScroll = function () {
+    const logo = document.querySelector('.hero_home_logo');
+    // const logoChildren = logo.querySelectorAll('*');
+    const heroLogoWrap = document.querySelector('.hero_home_logo_wrap');
+    const navLogoWrap = document.querySelector('.nav_logo');
+    const heroSection = document.querySelector('.hero_home_wrap');
+    //guard clause
+    if (!logo || !heroLogoWrap || !navLogoWrap) return;
+    console.log('hi');
+    const updateLogo = function (moveToHero = false) {
+      //get state
+      let state = Flip.getState(logo);
+      //move element
+      // if (moveToHero) {
+      //   heroLogoWrap.insertAdjacentElement('beforeend', logo);
+      // } else {
+      // }
+      navLogoWrap.insertAdjacentElement('beforeend', logo);
+      // animate element
+      Flip.from(state, {
+        ease: 'none',
+        absolute: true,
+        scale: true,
+        scrollTrigger: {
+          trigger: heroSection,
+          start: 'bottom 95%',
+          end: 'bottom center',
+          scrub: 1,
+        },
+      });
+    };
+    updateLogo(true);
+    // let tl = gsap.timeline({
+    //   scrollTrigger: {
+    //     trigger: heroSection,
+    //     start: 'bottom 95%',
+    //     end: 'bottom 96%',
+    //     scrub: true,
+    //     markers: true,
+    //     onEnter: () => {
+    //       console.log('onEnter');
+    //       updateLogo(false);
+    //     },
+    //     onEnterBack: () => {
+    //       console.log('onEnterBack');
+    //       // updateLogo(true);
+    //     },
+    //   },
+    // });
+  };
+  */
 
   //////////////////////////////
   //Functions from Original JS
@@ -302,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
         load(gsapContext);
         hoverActive(gsapContext);
         homeLoad();
+        homeLogoScroll();
         //OG Interactions
         globalNavbar();
         pageProjectTemplate();
