@@ -156,6 +156,12 @@ document.addEventListener('DOMContentLoaded', function () {
           end: 'bottom 75%',
           scrub: true,
           animation: flip,
+          // onComplete: () => {
+          //   logo.style.zIndex = 502;
+          // },
+          // onStart: () => {
+          //   logo.style.zIndex = 0;
+          // },
         });
       });
     };
@@ -276,14 +282,28 @@ document.addEventListener('DOMContentLoaded', function () {
     // Toggle the 'active' class on the hamburger
     hamburger.on('click', function () {
       navWrap.toggleClass('active');
+      //get logo container
+      const homeLogo = document.querySelector('.nav_logo');
 
+      //on open and close of nav
       if (navWrap.hasClass('active')) {
+        //if homepage hide the logo element
+        if (window.location.pathname === '/') {
+          gsap.fromTo(homeLogo, { opacity: 1 }, { opacity: 0, duration: 0.4, ease: 'power1.out' });
+          console.log('homeLogo');
+        }
+        //stop scrolling
         if (lenis !== undefined) {
           lenis.stop();
         } else {
           body.classList.add('no-scroll');
         }
       } else {
+        //if homepage show the logo element
+        if (window.location.pathname === '/') {
+          gsap.fromTo(homeLogo, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.in' });
+        }
+        //start scrolling
         if (lenis !== undefined) {
           lenis.start();
         } else {
@@ -468,9 +488,8 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       (gsapContext) => {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
-        const currentUrl = window.location.pathname;
         // if not homepage
-        if (currentUrl !== '/') {
+        if (window.location.pathname !== '/') {
           lenis = initLenis();
         }
         //functional interactions
