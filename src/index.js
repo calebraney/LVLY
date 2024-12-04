@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
         trigger: heroSection,
         start: 'center 45%',
         end: 'bottom 100%',
-        markers: true,
+        markers: false,
         onEnter: () => {
           // console.log('enter');
           updateLogo(false);
