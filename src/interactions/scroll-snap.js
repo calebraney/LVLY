@@ -19,7 +19,6 @@ export const scrollSnap = function (lenis) {
     // body.classList.remove('no-scroll');
     lenis.start();
   }
-  console.log(lenis);
   $(WRAP).each(function () {
     let wrap = $(this);
     let sections = $(this).find(SECTION);
