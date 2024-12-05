@@ -1,6 +1,7 @@
 import { attr } from './utilities';
 import { hoverActive } from './interactions/hover-active';
 import { scrollIn } from './interactions/scroll-in';
+import { scrollSnap } from './interactions/scroll-snap';
 import { load } from './interactions/load';
 import { initLenis } from './interactions/lenis';
 import { parallax } from './interactions/parallax';
@@ -495,6 +496,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //functional interactions
         load(gsapContext);
         hoverActive(gsapContext);
+        scrollSnap();
         homeLoad(isDesktop);
 
         //OG Interactions

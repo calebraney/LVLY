@@ -1101,6 +1101,143 @@
     });
   };
 
+  // src/interactions/scroll-snap.js
+  var scrollSnap = function() {
+    const WRAP = '[data-ix-scrollsnap="wrap"]';
+    const SECTION = '[data-ix-scrollsnap="item"]';
+    const TEXT = '[data-ix-scrollsnap="text"]';
+    const IMAGE = '[data-ix-scrollsnap="image"]';
+    const wraps = [...document.querySelectorAll(WRAP)];
+    const body = document.querySelector("body");
+    if (wraps.length === 0) return;
+    function stopScroll() {
+      body.classList.add("no-scroll");
+    }
+    function startScroll() {
+      body.classList.remove("no-scroll");
+    }
+    $(WRAP).each(function() {
+      let wrap = $(this);
+      let sections = $(this).find(SECTION);
+      let total = sections.length - 1;
+      let step = 0;
+      let active;
+      let animating = false;
+      let atTop = false;
+      let direction = 1;
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        setScroll();
+      }, 500);
+      function setScroll() {
+        function goToTop() {
+          window.scrollTo(0, wrap.offset().top);
+          stopScroll();
+        }
+        function checkUnlock() {
+          if (step === total && direction === 1) {
+            startScroll();
+          }
+        }
+        function animate(number) {
+          animating = true;
+          let prev = sections.eq(step);
+          let active2 = sections.eq(number);
+          let moveDown = step < number;
+          let tl = gsap.timeline({
+            defaults: {
+              ease: "power2.inOut",
+              duration: 0.8
+            },
+            onComplete: () => {
+              step = number;
+              animating = false;
+              checkUnlock();
+            }
+          });
+          tl.set(prev, { zIndex: 3 });
+          tl.set(active2, { zIndex: 2, visibility: "visible", opacity: 1 });
+          tl.fromTo(prev.find(IMAGE), { yPercent: 0 }, { yPercent: moveDown ? -100 : 100 }, "<");
+          tl.fromTo(active2.find(IMAGE), { yPercent: moveDown ? 20 : -20 }, { yPercent: 0 }, "<");
+          tl.fromTo(
+            prev.find(TEXT),
+            { opacity: 1, y: "0rem" },
+            {
+              opacity: 0,
+              y: moveDown ? "-2rem" : "2rem",
+              duration: 0.4,
+              stagger: 0.2,
+              ease: "power2.in"
+            },
+            "<.2"
+          );
+          tl.fromTo(
+            active2.find(TEXT),
+            { opacity: 0, y: moveDown ? "2rem" : "-2rem" },
+            { opacity: 1, y: "0rem", duration: 0.4, stagger: 0.2, ease: "power2.out" },
+            "<.4"
+          );
+          tl.set(prev, { visibility: "hidden", zIndex: 0 });
+          tl.to({}, { duration: 0.4 });
+        }
+        ScrollTrigger.observe({
+          target: window,
+          type: "wheel,touch",
+          wheelSpeed: -0.5,
+          tolerance: 10,
+          onUp: (self) => {
+            direction = 1;
+            if (animating === false && step < total && atTop) {
+              animate(step + 1);
+            }
+            if (animating === false && atTop) {
+              checkUnlock();
+            }
+          },
+          onDown: (self) => {
+            direction = -1;
+            if (animating === false && step > 0 && atTop) {
+              animate(step - 1);
+            }
+            if (animating === false && step === 0 && atTop) {
+              startScroll();
+            }
+          }
+        });
+        ScrollTrigger.create({
+          trigger: wrap,
+          start: "top top",
+          end: "4px top",
+          onLeave: () => {
+            atTop = false;
+          },
+          onEnterBack: () => {
+            goToTop();
+            atTop = true;
+          }
+        });
+        ScrollTrigger.create({
+          trigger: wrap,
+          start: "top 4px",
+          end: "top top",
+          onEnter: () => {
+            goToTop();
+            atTop = true;
+          },
+          onLeaveBack: () => {
+            atTop = false;
+          }
+        });
+        wrap.find("a").on("click", function() {
+          if (atTop) stopScroll();
+        });
+      }
+    });
+  };
+
   // src/interactions/load.js
   var load = function(gsapContext) {
     const ANIMATION_ID = "load";
@@ -6370,6 +6507,7 @@
           }
           load(gsapContext);
           hoverActive(gsapContext);
+          scrollSnap();
           homeLoad(isDesktop);
           globalNavbar();
           pageProjectTemplate();
