@@ -506,7 +506,9 @@ document.addEventListener('DOMContentLoaded', function () {
         //conditional interactions
         if (!reduceMotion) {
           scrollIn(gsapContext);
-          parallax(gsapContext);
+          if (!isMobile) {
+            parallax(gsapContext);
+          }
         }
       }
     );

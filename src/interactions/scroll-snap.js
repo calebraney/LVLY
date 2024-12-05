@@ -102,27 +102,27 @@ export const scrollSnap = function (isMobile) {
         wheelSpeed: -0.5,
         tolerance: 8,
         onUp: (self) => {
-          console.log('up');
+          //   console.log('up');
           direction = 1;
           if (animating === false && step < total && atTop) {
             animate(step + 1);
-            console.log('animate up');
+            // console.log('animate up');
           }
           if (animating === false && atTop) {
             checkUnlock();
-            console.log('check unloack');
+            // console.log('check unloack');
           }
         },
         onDown: (self) => {
-          console.log('down');
+          //   console.log('down');
           direction = -1;
           if (animating === false && step > 0 && atTop) {
             animate(step - 1);
-            console.log('animate down');
+            // console.log('animate down');
           }
           if (animating === false && step === 0 && atTop) {
             startScroll();
-            console.log('start scroll');
+            // console.log('start scroll');
           }
         },
       });
