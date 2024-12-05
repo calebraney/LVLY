@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   //global variables
   let lenis;
+  let clickedLink = false;
   const body = document.querySelector('body');
 
   //////////////////////////////
@@ -50,11 +51,14 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       onStart: () => {
         //  window.scrollY = 0;
-        body.classList.add('no-scroll');
+        // body.classList.add('no-scroll');
+        lenis.stop();
+
         // document.body.scrollTop = document.documentElement.scrollTop = 0;
       },
       onComplete: () => {
-        body.classList.remove('no-scroll');
+        // body.classList.remove('no-scroll');
+        lenis.start();
         homeLogoScroll();
       },
     });
@@ -176,9 +180,19 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
+    const links = document.querySelectorAll('a');
+    links.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        clickedLink = true;
+      });
+    });
+
     //force page to top on reaload
     window.onbeforeunload = function () {
-      window.scrollTo(0, 0);
+      if (!clickedLink) {
+        body.classList.remove('no-scroll');
+        window.scrollTo(0, 0);
+      }
     };
   };
 
@@ -490,14 +504,14 @@ document.addEventListener('DOMContentLoaded', function () {
       (gsapContext) => {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
         // if not homepage
-        lenis = initLenis();
         if (window.location.pathname !== '/') {
         }
+        lenis = initLenis();
         //functional interactions
         load(gsapContext);
+        homeLoad(isDesktop);
         hoverActive(gsapContext);
         scrollSnap(lenis);
-        homeLoad(isDesktop);
 
         //OG Interactions
         globalNavbar();
