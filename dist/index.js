@@ -1102,7 +1102,7 @@
   };
 
   // src/interactions/scroll-snap.js
-  var scrollSnap = function() {
+  var scrollSnap = function(isMobile) {
     const WRAP = '[data-ix-scrollsnap="wrap"]';
     const SECTION = '[data-ix-scrollsnap="item"]';
     const TEXT = '[data-ix-scrollsnap="text"]';
@@ -1189,21 +1189,27 @@
           wheelSpeed: -0.5,
           tolerance: 8,
           onUp: (self) => {
+            console.log("up");
             direction = 1;
             if (animating === false && step < total && atTop) {
               animate(step + 1);
+              console.log("animate up");
             }
             if (animating === false && atTop) {
               checkUnlock();
+              console.log("check unloack");
             }
           },
           onDown: (self) => {
+            console.log("down");
             direction = -1;
             if (animating === false && step > 0 && atTop) {
               animate(step - 1);
+              console.log("animate down");
             }
             if (animating === false && step === 0 && atTop) {
               startScroll();
+              console.log("start scroll");
             }
           }
         });
