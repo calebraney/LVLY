@@ -1,6 +1,6 @@
 import { attr, checkBreakpoints } from '../utilities';
 
-export const scrollSnap = function (isMobile) {
+export const scrollSnap = function (lenis) {
   const WRAP = '[data-ix-scrollsnap="wrap"]';
   const SECTION = '[data-ix-scrollsnap="item"]';
   const TEXT = '[data-ix-scrollsnap="text"]';
@@ -12,14 +12,14 @@ export const scrollSnap = function (isMobile) {
   if (wraps.length === 0) return;
 
   function stopScroll() {
-    body.classList.add('no-scroll');
-    // lenis.stop();
+    // body.classList.add('no-scroll');
+    lenis.stop();
   }
   function startScroll() {
-    body.classList.remove('no-scroll');
-    // lenis.start()
+    // body.classList.remove('no-scroll');
+    lenis.start();
   }
-
+  console.log(lenis);
   $(WRAP).each(function () {
     let wrap = $(this);
     let sections = $(this).find(SECTION);
@@ -100,7 +100,7 @@ export const scrollSnap = function (isMobile) {
         target: window,
         type: 'wheel,touch',
         wheelSpeed: -0.5,
-        tolerance: 8,
+        tolerance: 10,
         onUp: (self) => {
           //   console.log('up');
           direction = 1;

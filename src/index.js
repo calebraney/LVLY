@@ -490,13 +490,13 @@ document.addEventListener('DOMContentLoaded', function () {
       (gsapContext) => {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
         // if not homepage
+        lenis = initLenis();
         if (window.location.pathname !== '/') {
-          lenis = initLenis();
         }
         //functional interactions
         load(gsapContext);
         hoverActive(gsapContext);
-        scrollSnap();
+        scrollSnap(lenis);
         homeLoad(isDesktop);
 
         //OG Interactions
