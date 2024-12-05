@@ -100,7 +100,7 @@ export const scrollSnap = function () {
         target: window,
         type: 'wheel,touch',
         wheelSpeed: -0.5,
-        tolerance: 10,
+        tolerance: 8,
         onUp: (self) => {
           direction = 1;
           if (animating === false && step < total && atTop) {
