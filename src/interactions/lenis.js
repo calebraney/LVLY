@@ -1,10 +1,25 @@
 //Setup
 import Lenis from '@studio-freight/lenis';
 export const initLenis = function () {
+  let homepage = false;
+  if (window.location.pathname !== '/') {
+    homepage = true;
+  }
   const lenis = new Lenis({
     duration: 1,
-    easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)), // https://easings.net
+    // easing: (x) => 1 - Math.cos((x * Math.PI) / 2), // https://easings.net
+
+    //kinda working og ease
     touchMultiplier: 1.5,
+    wheelMultiplier: 0.7,
+    smoothWheel: homepage ? true : false,
+    // easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)), // https://easings.net
+    //TRICKS settings
+    // lerp: 0.1,
+    // gestureOrientation: 'vertical',
+    // smoothTouch: false,
+    //OTHER IDEAS
+    // prevent: (node) => node.classList.contains('work_home_wrap'),
   });
   // lenis request animation from
   function raf(time) {

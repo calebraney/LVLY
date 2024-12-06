@@ -51,13 +51,12 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       onStart: () => {
         //  window.scrollY = 0;
-        // body.classList.add('no-scroll');
+        body.classList.add('no-scroll');
         lenis.stop();
-
         // document.body.scrollTop = document.documentElement.scrollTop = 0;
       },
       onComplete: () => {
-        // body.classList.remove('no-scroll');
+        body.classList.remove('no-scroll');
         lenis.start();
         homeLogoScroll();
       },

@@ -11,14 +11,6 @@ export const scrollSnap = function (lenis) {
 
   if (wraps.length === 0) return;
 
-  function stopScroll() {
-    // body.classList.add('no-scroll');
-    lenis.stop();
-  }
-  function startScroll() {
-    // body.classList.remove('no-scroll');
-    lenis.start();
-  }
   $(WRAP).each(function () {
     let wrap = $(this);
     let sections = $(this).find(SECTION);
@@ -36,15 +28,29 @@ export const scrollSnap = function (lenis) {
       setScroll();
     }, 500);
 
+    //function to setup the scroll snap
     function setScroll() {
+      //utility functions
+
+      function stopScroll() {
+        body.classList.add('no-scroll');
+        // console.log('stop scroll');
+        lenis.stop();
+      }
+      function startScroll() {
+        body.classList.remove('no-scroll');
+        // console.log('start scroll');
+        lenis.start();
+      }
       function goToTop() {
+        // console.log('go to top');
         window.scrollTo(0, wrap.offset().top);
         stopScroll();
       }
-
-      function checkUnlock() {
+      function checkUnlockAtBottom() {
         if (step === total && direction === 1) {
           startScroll();
+          // console.log('unlock scroll');
         }
       }
 
@@ -61,10 +67,9 @@ export const scrollSnap = function (lenis) {
           onComplete: () => {
             step = number;
             animating = false;
-            checkUnlock();
+            checkUnlockAtBottom();
           },
         });
-        // tl.fromTo(prev, { opacity: 1 }, { opacity: 0, duration: 0.3 });
         //set active to visible and underneath previous
         tl.set(prev, { zIndex: 3 });
         tl.set(active, { zIndex: 2, visibility: 'visible', opacity: 1 });
@@ -89,40 +94,42 @@ export const scrollSnap = function (lenis) {
           { opacity: 1, y: '0rem', duration: 0.4, stagger: 0.2, ease: 'power2.out' },
           '<.4'
         );
-        // tl.fromTo(active.find(IMAGE), { y: '-10%' }, { y: '0%', duration: 0.3 }, '<');
         //hide previous
         tl.set(prev, { visibility: 'hidden', zIndex: 0 });
         tl.to({}, { duration: 0.4 });
       }
 
+      function upCallback(self) {
+        direction = 1;
+        if (animating === false && step < total && atTop) {
+          animate(step + 1);
+        }
+        if (animating === false && atTop) {
+          checkUnlockAtBottom();
+        }
+      }
+      function downCallback(self) {
+        direction = -1;
+        if (animating === false && step > 0 && atTop) {
+          animate(step - 1);
+        }
+        if (animating === false && step === 0 && atTop) {
+          startScroll();
+        }
+      }
+      //handle wheel events
       ScrollTrigger.observe({
         target: window,
         type: 'wheel,touch',
-        wheelSpeed: -1,
+        wheelSpeed: -0.3,
         tolerance: 10,
         onUp: (self) => {
-          //   console.log('up');
-          direction = 1;
-          if (animating === false && step < total && atTop) {
-            animate(step + 1);
-            // console.log('animate up');
-          }
-          if (animating === false && atTop) {
-            checkUnlock();
-            // console.log('check unloack');
-          }
+          upCallback(self);
+          // console.log('up');
         },
         onDown: (self) => {
-          //   console.log('down');
-          direction = -1;
-          if (animating === false && step > 0 && atTop) {
-            animate(step - 1);
-            // console.log('animate down');
-          }
-          if (animating === false && step === 0 && atTop) {
-            startScroll();
-            // console.log('start scroll');
-          }
+          // console.log('down');
+          downCallback(self);
         },
       });
 
@@ -130,6 +137,7 @@ export const scrollSnap = function (lenis) {
         trigger: wrap,
         start: 'top top',
         end: '4px top',
+        markers: false,
         onLeave: () => {
           atTop = false;
         },
@@ -143,6 +151,7 @@ export const scrollSnap = function (lenis) {
         trigger: wrap,
         start: 'top 4px',
         end: 'top top',
+        markers: false,
         onEnter: () => {
           goToTop();
           atTop = true;
@@ -203,7 +212,7 @@ export const scrollSnap = function () {
         stopScroll();
       }
 
-      function checkUnlock() {
+      function checkUnlockAtBottom() {
         if (step === total && direction === 1) {
           startScroll();
         }
@@ -217,7 +226,7 @@ export const scrollSnap = function () {
           onComplete: () => {
             step = number;
             animating = false;
-            checkUnlock();
+            checkUnlockAtBottom();
           },
         });
         tl.fromTo(prev, { opacity: 1 }, { opacity: 0, duration: 0.3 });
@@ -248,7 +257,7 @@ export const scrollSnap = function () {
             animate(step + 1);
           }
           if (animating === false && atTop) {
-            checkUnlock();
+            checkUnlockAtBottom();
           }
         },
         onDown: (self) => {
