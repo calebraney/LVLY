@@ -98,7 +98,7 @@ export const scrollSnap = function (lenis) {
       ScrollTrigger.observe({
         target: window,
         type: 'wheel,touch',
-        wheelSpeed: -0.5,
+        wheelSpeed: -1,
         tolerance: 10,
         onUp: (self) => {
           //   console.log('up');
