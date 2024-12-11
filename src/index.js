@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       {
         x: isDesktop ? '0em' : '0%',
+        ease: 'power1.inOut',
       },
       '-=.4'
     );
