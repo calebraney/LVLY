@@ -454,12 +454,12 @@ document.addEventListener('DOMContentLoaded', function () {
       navigation: {
         nextEl: '.swiper-next',
       },
-      effect: 'coverflow',
-      coverflowEffect: {
-        rotate: 0,
-        scale: 1,
-        slideShadows: false,
-      },
+      // effect: 'coverflow',
+      // coverflowEffect: {
+      //   rotate: 0,
+      //   scale: 1,
+      //   slideShadows: false,
+      // },
     });
 
     // Play the video of the active slide and show controls
