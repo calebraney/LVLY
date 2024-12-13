@@ -68,7 +68,7 @@ export const scrollIn = function (gsapContext) {
       varsTo.stagger = { each: 0.1, from: 'start' };
     }
     if (options.stagger === 'large') {
-      varsTo.stagger = { each: 0.3, from: 'start' };
+      varsTo.stagger = { each: 0.2, from: 'start' };
     }
     // putting tween together
     const tween = tl.fromTo(item, varsFrom, varsTo);
