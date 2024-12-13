@@ -2,6 +2,7 @@ import { attr } from './utilities';
 import { hoverActive } from './interactions/hover-active';
 import { scrollIn } from './interactions/scroll-in';
 import { scrollSnap } from './interactions/scroll-snap';
+import { createSlider } from './interactions/slider';
 import { load } from './interactions/load';
 import { initLenis } from './interactions/lenis';
 import { parallax } from './interactions/parallax';
@@ -22,6 +23,24 @@ document.addEventListener('DOMContentLoaded', function () {
   let lenis;
   let clickedLink = false;
   const body = document.querySelector('body');
+
+  //////////////////////////////
+  //Slider instances
+  const aboutSlider = function () {
+    const COMPONENT = '.slider_wrap.is-about';
+    const components = [...document.querySelectorAll(COMPONENT)];
+    const options = {
+      slidesPerView: 'auto',
+      loop: true,
+    };
+    const modules = {
+      navigation: false,
+      pagination: false,
+      scrollbar: false,
+      autoplay: false,
+    };
+    const sliders = createSlider(components, options, modules);
+  };
 
   //////////////////////////////
   //custom interactions
@@ -422,20 +441,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-    // Close the overlay when clicking the close icon
-    $('[data-close-icon="overlay"]').on('click', function () {
-      lightboxWrap.removeClass('active');
-      lenis.start(); // Start Lenis when overlay is closed
-    });
-
-    // Close the overlay on pressing the Escape key
-    $(document).on('keydown', function (e) {
-      if (e.key === 'Escape') {
-        lightboxWrap.removeClass('active');
-        lenis.start(); // Start Lenis when Escape key is pressed
-      }
-    });
-
     // Editor Lightbox Swiper
     const lightboxSwiper = new Swiper('.swiper.is-editor', {
       modules: [Navigation, EffectCoverflow],
@@ -484,6 +489,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     }
+
+    // Close the overlay when clicking the close icon
+    $('[data-close-icon="overlay"]').on('click', function () {
+      lightboxWrap.removeClass('active');
+      lenis.start(); // Start Lenis when overlay is closed
+      $(videos).each(function () {
+        this.pause(); // Pause the video
+        this.currentTime = 0; // Reset to the start
+        $(this).removeAttr('controls'); // Optionally remove controls
+      });
+    });
+
+    // Close the overlay on pressing the Escape key
+    $(document).on('keydown', function (e) {
+      if (e.key === 'Escape') {
+        lightboxWrap.removeClass('active');
+        lenis.start(); // Start Lenis when Escape key is pressed
+        $(videos).each(function () {
+          this.pause(); // Pause the video
+          this.currentTime = 0; // Reset to the start
+          $(this).removeAttr('controls'); // Optionally remove controls
+        });
+      }
+    });
   }
 
   //////////////////////////////
@@ -512,6 +541,7 @@ document.addEventListener('DOMContentLoaded', function () {
         homeLoad(isDesktop);
         hoverActive(gsapContext);
         scrollSnap(lenis);
+        aboutSlider();
 
         //OG Interactions
         globalNavbar();
