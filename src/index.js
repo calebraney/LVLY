@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function () {
       effect: 'coverflow',
       coverflowEffect: {
         rotate: 0,
-        scale: 0.9,
+        scale: 1,
         slideShadows: false,
       },
     });
