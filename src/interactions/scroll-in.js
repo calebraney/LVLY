@@ -21,6 +21,7 @@ export const scrollIn = function (gsapContext) {
   const SCROLL_START = 'data-ix-scrollin-start';
   const SCROLL_END = 'data-ix-scrollin-end';
   const CLIP_DIRECTION = 'data-ix-scrollin-direction';
+  const SCROLL_STAGGER = 'data-ix-scrollin-stagger';
 
   //resuable timeline creation with option attributes for individual customization per element
   const scrollInTL = function (item) {
@@ -64,6 +65,9 @@ export const scrollIn = function (gsapContext) {
     };
     //optional adjustments to the tween
     // {stagger: large}
+    if (options.stagger) {
+      varsTo.stagger = { each: options.stagger, from: 'start' };
+    }
     if (options.stagger === 'small') {
       varsTo.stagger = { each: 0.1, from: 'start' };
     }
@@ -200,12 +204,12 @@ export const scrollIn = function (gsapContext) {
 
   const scrollInStagger = function (item) {
     if (!item) return;
-
+    const ease = attr(0.2, item.getAttribute(SCROLL_STAGGER));
     // get the children of the item
     const children = gsap.utils.toArray(item.children);
     if (children.length === 0) return;
     const tl = scrollInTL(item);
-    const tween = defaultTween(children, tl, { stagger: 'large' });
+    const tween = defaultTween(children, tl, { stagger: ease });
   };
 
   const scrollInRichText = function (item) {
