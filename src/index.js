@@ -6,6 +6,7 @@ import { createSlider } from './interactions/slider';
 import { load } from './interactions/load';
 import { initLenis } from './interactions/lenis';
 import { parallax } from './interactions/parallax';
+import { setLightboxCookie, clickLightBox } from './interactions/lightbox-cookie';
 import Swiper from 'swiper';
 import { EffectCoverflow, Navigation, Pagination } from 'swiper/modules';
 
@@ -70,12 +71,10 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       onStart: () => {
         //  window.scrollY = 0;
-        body.classList.add('no-scroll');
+        lenis.scrollTo(heroSection, { duration: 0 });
         lenis.stop();
-        // document.body.scrollTop = document.documentElement.scrollTop = 0;
       },
       onComplete: () => {
-        body.classList.remove('no-scroll');
         lenis.start();
         homeLogoScroll();
       },
@@ -158,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const heroSection = document.querySelector('.hero_home_wrap');
     //guard clause
     if (!logo || !heroLogoWrap || !navLogoWrap) return;
+
     const updateLogo = function () {
       flipCtx && flipCtx.revert();
 
@@ -209,6 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //force page to top on reaload
     window.onbeforeunload = function () {
       if (!clickedLink) {
+        // lenis.scrollTo(heroSection, { duration: 0 });
         body.classList.remove('no-scroll');
         window.scrollTo(0, 0);
       }
@@ -324,7 +325,6 @@ document.addEventListener('DOMContentLoaded', function () {
         //if homepage hide the logo element
         if (window.location.pathname === '/') {
           gsap.fromTo(homeLogo, { opacity: 1 }, { opacity: 0, duration: 0.4, ease: 'power1.out' });
-          console.log('homeLogo');
         }
         //stop scrolling
         if (lenis !== undefined) {
@@ -415,6 +415,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Lightbox animation
     const lightboxWrap = $('.editor_lightbox_wrap');
     const workLinks = $('.work_link');
+
     //check if elements are there
     if (lightboxWrap.length === 0) return;
 
@@ -545,8 +546,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         //OG Interactions
         globalNavbar();
-        pageProjectTemplate();
         pageEditorTemplate();
+        pageProjectTemplate();
+
+        //lightbox click interactions
+        setLightboxCookie();
+        clickLightBox();
         //conditional interactions
         if (!reduceMotion) {
           scrollIn(gsapContext);

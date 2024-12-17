@@ -72,15 +72,18 @@ export const scrollSnap = function (lenis) {
         yPercent: 0,
       }
     );
-    if (text !== undefined && index !== 0) {
+    if (text !== undefined) {
       tlIn.fromTo(
         text,
         {
           opacity: 0,
+          y: '2rem',
         },
         {
           opacity: 1,
+          y: '0rem',
           duration: 0.5,
+          stagger: { each: 0.1, from: 'start' },
         },
         '<.25'
       );
