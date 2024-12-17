@@ -2,15 +2,113 @@ import { attr, checkBreakpoints } from '../utilities';
 
 export const scrollSnap = function (lenis) {
   const WRAP = '[data-ix-scrollsnap="wrap"]';
+  const HERO = '[data-ix-scrollsnap="hero-video"]';
+  const HERO_WRAP = '[data-ix-scrollsnap="hero-wrap"]';
+
   const SECTION = '[data-ix-scrollsnap="item"]';
+  const SPACER = '[data-ix-scrollsnap="spacer"]';
   const TEXT = '[data-ix-scrollsnap="text"]';
   const IMAGE = '[data-ix-scrollsnap="image"]';
 
-  const wraps = [...document.querySelectorAll(WRAP)];
-  const body = document.querySelector('body');
+  const sections = [...document.querySelectorAll(SECTION)];
+  const spacers = [...document.querySelectorAll(SPACER)];
+  const hero = document.querySelector(HERO);
+  const heroWrap = document.querySelector(HERO_WRAP);
 
-  if (wraps.length === 0) return;
+  //hero section
+  let heroTL = gsap.timeline({
+    scrollTrigger: {
+      trigger: heroWrap,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true,
+      markers: false,
+    },
+    defaults: {
+      duration: 1,
+      ease: 'none',
+    },
+  });
+  heroTL.fromTo(
+    hero,
+    {
+      yPercent: 0,
+    },
+    {
+      yPercent: 20,
+    }
+  );
 
+  //work sections
+
+  sections.forEach(function (section, index) {
+    const spacer = spacers[index];
+    const image = section.querySelector(IMAGE);
+    const text = [...section.querySelectorAll(TEXT)];
+    const nextSection = sections[index + 1];
+    //reverse the order so the first item is on top
+    section.style.zIndex = 100 - index;
+    section.style.visibility = 'visible';
+    // if (index !== 0) {
+    let tlIn = gsap.timeline({
+      scrollTrigger: {
+        trigger: spacer,
+        start: 'top bottom',
+        end: 'top 0%',
+        scrub: true,
+        markers: false,
+      },
+      defaults: {
+        duration: 1,
+        ease: 'none',
+      },
+    });
+    tlIn.fromTo(
+      section,
+      {
+        yPercent: 20,
+      },
+      {
+        yPercent: 0,
+      }
+    );
+    if (text !== undefined && index !== 0) {
+      tlIn.fromTo(
+        text,
+        {
+          opacity: 0,
+        },
+        {
+          opacity: 1,
+          duration: 0.5,
+        },
+        '<.25'
+      );
+    }
+    // }
+    // if (index !== sections.length - 1) {
+    // console.log(section, index);
+    let tlOut = gsap.timeline({
+      scrollTrigger: {
+        trigger: spacer,
+        start: 'bottom 99%',
+        end: 'bottom top',
+        scrub: true,
+        markers: false,
+      },
+      defaults: {
+        duration: 1,
+        ease: 'none',
+      },
+    });
+    tlOut.to(section, {
+      yPercent: -100,
+    });
+    // }
+  });
+};
+/*
+Scroll Snap code (too buggy)
   $(WRAP).each(function () {
     let wrap = $(this);
     let sections = $(this).find(SECTION);
@@ -166,145 +264,6 @@ export const scrollSnap = function (lenis) {
       });
     }
   });
-};
 
-/*
-Vanilla JS Version (not working)
 
-export const scrollSnap = function () {
-  const WRAP = '[data-ix-scrollsnap="wrap"]';
-  const SECTION = '[data-ix-scrollsnap="item"]';
-  const TEXT = '[data-ix-scrollsnap="text"]';
-  const IMAGE = '[data-ix-scrollsnap="image"]';
-
-  const wraps = [...document.querySelectorAll(WRAP)];
-
-  if (wraps.length === 0) return;
-
-  function stopScroll() {
-    body.classList.add('no-scroll');
-    // lenis.stop();
-  }
-  function startScroll() {
-    body.classList.remove('no-scroll');
-    // lenis.start();
-  }
-
-  wraps.forEach((wrap) => {
-    const sections = [...wrap.querySelectorAll(SECTION)];
-    let total = sections.length - 1;
-    let step = 0;
-    let active;
-    let animating = false;
-    let atTop = false;
-    let direction = 1;
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-      setScroll();
-    }, 500);
-
-    function setScroll() {
-      function goToTop() {
-        window.scrollTo(0, wrap.offset().top);
-        stopScroll();
-      }
-
-      function checkUnlockAtBottom() {
-        if (step === total && direction === 1) {
-          startScroll();
-        }
-      }
-
-      function animate(number) {
-        animating = true;
-        let prev = sections[step];
-        let active = sections[number];
-        let tl = gsap.timeline({
-          onComplete: () => {
-            step = number;
-            animating = false;
-            checkUnlockAtBottom();
-          },
-        });
-        tl.fromTo(prev, { opacity: 1 }, { opacity: 0, duration: 0.3 });
-        tl.set(prev, { visibility: 'hidden' });
-        tl.set(active, { visibility: 'visible', opacity: 1 });
-        // tl.fromTo(
-        //   active.querySelectorAll('.char'),
-        //   { opacity: 0, y: '1rem' },
-        //   { opacity: 1, y: '0em', duration: 0.3, stagger: { amount: 0.3 } }
-        // );
-        tl.fromTo(
-          active.querySelectorAll(TEXT),
-          { opacity: 0 },
-          { opacity: 1, duration: 0.3 },
-          '<60%'
-        );
-        tl.to({}, { duration: 1 });
-      }
-
-      ScrollTrigger.observe({
-        target: window,
-        type: 'wheel,touch',
-        wheelSpeed: -1,
-        tolerance: 10,
-        onUp: (self) => {
-          direction = 1;
-          if (animating === false && step < total && atTop) {
-            animate(step + 1);
-          }
-          if (animating === false && atTop) {
-            checkUnlockAtBottom();
-          }
-        },
-        onDown: (self) => {
-          direction = -1;
-          if (animating === false && step > 0 && atTop) {
-            animate(step - 1);
-          }
-          if (animating === false && step === 0 && atTop) {
-            startScroll();
-          }
-        },
-      });
-
-      ScrollTrigger.create({
-        trigger: wrap,
-        start: 'top top',
-        end: '4px top',
-        onLeave: () => {
-          atTop = false;
-        },
-        onEnterBack: () => {
-          goToTop();
-          atTop = true;
-        },
-      });
-
-      ScrollTrigger.create({
-        trigger: wrap,
-        start: 'top 4px',
-        end: 'top top',
-        onEnter: () => {
-          goToTop();
-          atTop = true;
-        },
-        onLeaveBack: () => {
-          atTop = false;
-        },
-      });
-
-      const links = wrap.querySelectorAll('a');
-      links.forEach((link) => {
-        link.addEventListener('click', () => {
-          //do somethign on hover in
-          if (atTop) stopScroll();
-        });
-      });
-    }
-  });
-};
 */

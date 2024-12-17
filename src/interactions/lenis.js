@@ -12,7 +12,7 @@ export const initLenis = function () {
     //kinda working og ease
     touchMultiplier: 1.5,
     wheelMultiplier: 0.7,
-    smoothWheel: homepage ? true : false,
+    smoothWheel: true,
     // easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)), // https://easings.net
     //TRICKS settings
     // lerp: 0.1,
