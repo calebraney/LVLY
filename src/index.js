@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
   //custom interactions
 
   //scroll timeline interactions
+
   const homeLoad = function (isDesktop) {
     const SECTION = '[data-ix-homeload="wrap"]';
     const MAIN_VIDEO = '[data-ix-homeload="video"]';
@@ -70,13 +71,18 @@ document.addEventListener('DOMContentLoaded', function () {
         ease: 'power2.out',
       },
       onStart: () => {
-        //  window.scrollY = 0;
-        lenis.scrollTo(heroSection, { duration: 0 });
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
         lenis.stop();
+        links.forEach((link) => {
+          link.classList.add('u-pointer-events-none');
+        });
       },
       onComplete: () => {
         lenis.start();
         homeLogoScroll();
+        links.forEach((link) => {
+          link.classList.remove('u-pointer-events-none');
+        });
       },
     });
     tl.fromTo(
@@ -211,6 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!clickedLink) {
         // lenis.scrollTo(heroSection, { duration: 0 });
         body.classList.remove('no-scroll');
+        // document.body.scrollTop = document.documentElement.scrollTop = 0;
         window.scrollTo(0, 0);
       }
     };

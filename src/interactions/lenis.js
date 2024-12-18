@@ -2,8 +2,12 @@
 import Lenis from '@studio-freight/lenis';
 export const initLenis = function () {
   let homepage = false;
-  if (window.location.pathname !== '/') {
+  if (window.location.pathname === '/') {
     homepage = true;
+  }
+  if (homepage) {
+    // document.body.scrollTop = document.documentElement.scrollTop = 0;
+    // Prevents back button bug on safari
   }
   const lenis = new Lenis({
     duration: 1,
