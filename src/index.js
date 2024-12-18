@@ -536,6 +536,7 @@ document.addEventListener('DOMContentLoaded', function () {
         isMobile: '(max-width: 767px)',
         isTablet: '(min-width: 768px)  and (max-width: 991px)',
         isDesktop: '(min-width: 992px)',
+        isDesktopXL: '(min-width: 1920px)',
         reduceMotion: '(prefers-reduced-motion: reduce)',
       },
       (gsapContext) => {
