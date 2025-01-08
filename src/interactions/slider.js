@@ -13,7 +13,7 @@ export const createSlider = function (components, options, modules) {
   const SLIDER = '.swiper';
   const NEXT_BUTTON = '.swiper-next';
   const PREVIOUS_BUTTON = '.swiper-prev';
-  const BULLET_WRAP = '.swiper-bullet-wrapper';
+  const BULLET_WRAP = '.pagination';
   const SCROLLBAR = '.swiper-scrollbar';
   const SCROLLBAR_DRAG = '.swiper-scrollbar-drag';
   //classes
@@ -56,16 +56,12 @@ export const createSlider = function (components, options, modules) {
     //PAGINATION
     if (modules.pagination === true) {
       //get the pagination elements
-      const bulletsEl = component.querySelector(BULLET_WRAP);
+      const paginationEl = component.querySelector(BULLET_WRAP);
       //set the pagination settings
       const paginationSettings = {
         pagination: {
-          type: 'bullets',
-          el: bulletsEl,
-          bulletActiveClass: ACTIVE_CLASS,
-          bulletClass: 'swiper-bullet',
-          bulletElement: 'button',
-          clickable: true,
+          el: paginationEl,
+          type: 'fraction',
         },
       };
       finalModules = { ...finalModules, ...paginationSettings };

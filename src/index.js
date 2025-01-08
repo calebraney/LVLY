@@ -34,9 +34,31 @@ document.addEventListener('DOMContentLoaded', function () {
       slidesPerView: 'auto',
       loop: true,
     };
+    //apply a module with defaults settings (canc override them using the options object above)
     const modules = {
       navigation: false,
       pagination: false,
+      scrollbar: false,
+      autoplay: false,
+    };
+    const sliders = createSlider(components, options, modules);
+  };
+
+  const caseSlider = function () {
+    const COMPONENT = '.section_slider.is-case-study';
+    const components = [...document.querySelectorAll(COMPONENT)];
+
+    const options = {
+      slidesPerView: 'auto',
+      slidesPerGroup: 1,
+      loop: false,
+      centeredSlides: false,
+      spaceBetween: 20,
+      grabCursor: true,
+    };
+    const modules = {
+      navigation: false,
+      pagination: true,
       scrollbar: false,
       autoplay: false,
     };
@@ -71,18 +93,18 @@ document.addEventListener('DOMContentLoaded', function () {
         ease: 'power2.out',
       },
       onStart: () => {
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
-        lenis.stop();
-        links.forEach((link) => {
-          link.classList.add('u-pointer-events-none');
-        });
+        // document.body.scrollTop = document.documentElement.scrollTop = 0;
+        // lenis.stop();
+        // links.forEach((link) => {
+        //   link.classList.add('u-pointer-events-none');
+        // });
       },
       onComplete: () => {
-        lenis.start();
-        homeLogoScroll();
-        links.forEach((link) => {
-          link.classList.remove('u-pointer-events-none');
-        });
+        // lenis.start();
+        // homeLogoScroll();
+        // links.forEach((link) => {
+        //   link.classList.remove('u-pointer-events-none');
+        // });
       },
     });
     tl.fromTo(
@@ -325,14 +347,14 @@ document.addEventListener('DOMContentLoaded', function () {
     hamburger.on('click', function () {
       navWrap.toggleClass('active');
       //get logo container
-      const homeLogo = document.querySelector('.nav_logo');
+      // const homeLogo = document.querySelector('.nav_logo');
 
       //on open and close of nav
       if (navWrap.hasClass('active')) {
         //if homepage hide the logo element
-        if (window.location.pathname === '/') {
-          gsap.fromTo(homeLogo, { opacity: 1 }, { opacity: 0, duration: 0.4, ease: 'power1.out' });
-        }
+        // if (window.location.pathname === '/') {
+        //   gsap.fromTo(homeLogo, { opacity: 1 }, { opacity: 0, duration: 0.4, ease: 'power1.out' });
+        // }
         //stop scrolling
         if (lenis !== undefined) {
           lenis.stop();
@@ -341,9 +363,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } else {
         //if homepage show the logo element
-        if (window.location.pathname === '/') {
-          gsap.fromTo(homeLogo, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.in' });
-        }
+        // if (window.location.pathname === '/') {
+        //   gsap.fromTo(homeLogo, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.in' });
+        // }
         //start scrolling
         if (lenis !== undefined) {
           lenis.start();
@@ -551,6 +573,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hoverActive(gsapContext);
         scrollSnap(lenis);
         aboutSlider();
+        caseSlider();
 
         //OG Interactions
         globalNavbar();
