@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function () {
     hamburger.on('click', function () {
       navWrap.toggleClass('active');
       //get logo container
-      // const homeLogo = document.querySelector('.nav_logo');
+      const homeLogo = document.querySelector('.nav_logo');
 
       //on open and close of nav
       if (navWrap.hasClass('active')) {
