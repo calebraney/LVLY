@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
       slidesPerView: 'auto',
       slidesPerGroup: 1,
       loop: false,
-      centeredSlides: false,
-      spaceBetween: 20,
+      centeredSlides: true,
+      spaceBetween: 32,
       grabCursor: true,
     };
     const modules = {
@@ -93,18 +93,18 @@ document.addEventListener('DOMContentLoaded', function () {
         ease: 'power2.out',
       },
       onStart: () => {
-        // document.body.scrollTop = document.documentElement.scrollTop = 0;
-        // lenis.stop();
-        // links.forEach((link) => {
-        //   link.classList.add('u-pointer-events-none');
-        // });
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        lenis.stop();
+        links.forEach((link) => {
+          link.classList.add('u-pointer-events-none');
+        });
       },
       onComplete: () => {
-        // lenis.start();
-        // homeLogoScroll();
-        // links.forEach((link) => {
-        //   link.classList.remove('u-pointer-events-none');
-        // });
+        lenis.start();
+        homeLogoScroll();
+        links.forEach((link) => {
+          link.classList.remove('u-pointer-events-none');
+        });
       },
     });
     tl.fromTo(
@@ -137,38 +137,40 @@ document.addEventListener('DOMContentLoaded', function () {
       logoPaths,
       {
         opacity: 0,
+        y: '2rem',
       },
       {
         opacity: 1,
+        y: '0rem',
         ease: 'power2.inOut',
         duration: 1.2,
         stagger: { each: 0.2, from: 'start' },
       },
       '<'
     );
-    tl.fromTo(
-      logo,
-      {
-        x: isDesktop ? '26em' : '30%',
-      },
-      {
-        x: isDesktop ? '0em' : '0%',
-        ease: 'power1.inOut',
-      },
-      '-=.4'
-    );
+    // tl.fromTo(
+    //   logo,
+    //   {
+    //     y: '2rem',
+    //   },
+    //   {
+    //     y: '0rem',
+    //     ease: 'power1.inOut',
+    //   },
+    //   '-=.4'
+    // );
     tl.fromTo(
       links,
       {
-        x: isDesktop ? '-10em' : '-2em;',
+        y: '2rem',
         opacity: 0,
       },
       {
-        x: '0em',
+        y: '0rem',
         opacity: 1,
         stagger: { each: 0.1, from: 'start' },
       },
-      '<.2'
+      '<.8'
     );
   };
 
@@ -352,9 +354,9 @@ document.addEventListener('DOMContentLoaded', function () {
       //on open and close of nav
       if (navWrap.hasClass('active')) {
         //if homepage hide the logo element
-        // if (window.location.pathname === '/') {
-        //   gsap.fromTo(homeLogo, { opacity: 1 }, { opacity: 0, duration: 0.4, ease: 'power1.out' });
-        // }
+        if (window.location.pathname === '/') {
+          gsap.fromTo(homeLogo, { opacity: 1 }, { opacity: 0, duration: 0.4, ease: 'power1.out' });
+        }
         //stop scrolling
         if (lenis !== undefined) {
           lenis.stop();
@@ -363,9 +365,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } else {
         //if homepage show the logo element
-        // if (window.location.pathname === '/') {
-        //   gsap.fromTo(homeLogo, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.in' });
-        // }
+        if (window.location.pathname === '/') {
+          gsap.fromTo(homeLogo, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.in' });
+        }
         //start scrolling
         if (lenis !== undefined) {
           lenis.start();
