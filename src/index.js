@@ -133,32 +133,34 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       '<'
     );
-    tl.fromTo(
-      logoPaths,
-      {
-        opacity: 0,
-        y: '2rem',
-      },
-      {
-        opacity: 1,
-        y: '0rem',
-        ease: 'power2.inOut',
-        duration: 1.2,
-        stagger: { each: 0.2, from: 'start' },
-      },
-      '<'
-    );
     // tl.fromTo(
-    //   logo,
+    //   logoPaths,
     //   {
+    //     opacity: 0,
     //     y: '2rem',
     //   },
     //   {
+    //     opacity: 1,
     //     y: '0rem',
-    //     ease: 'power1.inOut',
+    //     ease: 'power2.inOut',
+    //     duration: 1.2,
+    //     stagger: { each: 0.2, from: 'start' },
     //   },
-    //   '-=.4'
+    //   '<'
     // );
+    tl.fromTo(
+      logo,
+      {
+        y: '2rem',
+        opacity: 0,
+      },
+      {
+        y: '0rem',
+        opacity: 1,
+        ease: 'power1.inOut',
+      },
+      '<'
+    );
     tl.fromTo(
       links,
       {
