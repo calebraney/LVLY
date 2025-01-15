@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
       slidesPerView: 'auto',
       slidesPerGroup: 1,
       loop: false,
-      centeredSlides: true,
-      spaceBetween: 32,
+      centeredSlides: false,
+      spaceBetween: 0,
       grabCursor: true,
     };
     const modules = {
