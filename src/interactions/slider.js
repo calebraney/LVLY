@@ -56,15 +56,16 @@ export const createSlider = function (components, options, modules) {
     //PAGINATION
     if (modules.pagination === true) {
       //get the pagination elements
-      const paginationEl = component.querySelector(BULLET_WRAP);
-      //set the pagination settings
-      const paginationSettings = {
-        pagination: {
-          el: paginationEl,
-          type: 'fraction',
-        },
-      };
-      finalModules = { ...finalModules, ...paginationSettings };
+      // const paginationEl = component.querySelector(BULLET_WRAP);
+      // //utility function for padding numbers
+      // //set the pagination settings
+      // const paginationSettings = {
+      //   pagination: {
+      //     el: paginationEl,
+      //     type: 'fraction',
+      //   },
+      // };
+      // finalModules = { ...finalModules, ...paginationSettings };
     }
     //SCROLLBAR
     if (modules.scrollbar === true) {
@@ -100,6 +101,34 @@ export const createSlider = function (components, options, modules) {
     const swiperSettings = { ...defaultSettings, ...finalModules, ...options };
     //create swiper
     const swiper = new Swiper(slider, swiperSettings);
+
+    //Pagination
+    if (modules.pagination === true) {
+      //utility function for numbers
+      function numberWithZero(num) {
+        if (num < 10) {
+          return '0' + num;
+        } else {
+          return num;
+        }
+      }
+      const swiperEl = swiper.el;
+      if (!swiperEl) return;
+      //set total slides
+      let totalSlidesNumber = numberWithZero(swiper.slides.length);
+      const totalSlideEl = swiperEl.querySelector('.pagination_number-total');
+      totalSlideEl.textContent = totalSlidesNumber;
+
+      const currentSlide = swiperEl.querySelector('.pagination_number-current');
+      console.log(totalSlideEl, currentSlide);
+      //set current number on change
+      swiper.on('slideChange', function (e) {
+        let slideNumber = numberWithZero(swiper.realIndex + 1);
+        console.log(slideNumber);
+        currentSlide.textContent = slideNumber;
+      });
+    }
+
     //push swiper to array for access
     swipersArray.push(swiper);
   });

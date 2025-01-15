@@ -63,6 +63,9 @@ document.addEventListener('DOMContentLoaded', function () {
       autoplay: false,
     };
     const sliders = createSlider(components, options, modules);
+
+    // console.log(sliders[0].params);
+    // console.log(sliders[0].params.pagination.el);
   };
 
   //////////////////////////////
