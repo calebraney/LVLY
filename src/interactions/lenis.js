@@ -67,7 +67,7 @@ export const initLenis = function () {
 
   // stop page scrolling
   function stopScroll() {
-    const stopScrollLinks = document.querySelectorAll('[scroll="stop"]');
+    const stopScrollLinks = document.querySelectorAll('[data-lenis-stop]');
     if (stopScrollLinks == null) {
       return;
     }
@@ -81,7 +81,7 @@ export const initLenis = function () {
 
   // start page scrolling
   function startScroll() {
-    const startScrollLinks = document.querySelectorAll('[scroll="start"]');
+    const startScrollLinks = document.querySelectorAll('[data-lenis-start]');
     if (startScrollLinks == null) {
       return;
     }
@@ -95,7 +95,7 @@ export const initLenis = function () {
 
   // toggle page scrolling
   function toggleScroll() {
-    const toggleScrollLinks = document.querySelectorAll('[scroll="toggle"]');
+    const toggleScrollLinks = document.querySelectorAll('[data-lenis-toggle]');
     if (toggleScrollLinks == null) {
       return;
     }
